@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LindaJamii - Call Center Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .academy-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            color: #ffffff;
+            font-size: 2.5rem;
+        }
+        
+        .header-text h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .header-text p {
+            color: #a8dadc;
+            font-weight: 500;
+        }
+        
+        .stats-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1d3557;
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+        }
+        
+        .stats-card .number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #e63946;
+        }
+        
+        .stats-card .label {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: #1d3557;
+        }
+        
+        .dashboard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .controls-left {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .refresh-btn, .clear-btn, .simulate-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .refresh-btn {
+            background-color: #457b9d;
+            color: white;
+        }
+        
+        .refresh-btn:hover {
+            background-color: #1d3557;
+        }
+        
+        .clear-btn {
+            background-color: #f1faee;
+            color: #e63946;
+            border: 2px solid #e63946;
+        }
+        
+        .clear-btn:hover {
+            background-color: #ffeaea;
+        }
+        
+        .simulate-btn {
+            background-color: #2a9d8f;
+            color: white;
+            border: 2px solid #2a9d8f;
+        }
+        
+        .simulate-btn:hover {
+            background-color: #21867a;
+        }
+        
+        .back-link {
+            padding: 12px 25px;
+            background-color: #1d3557;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-link:hover {
+            background-color: #14213d;
+            transform: translateY(-3px);
+        }
+        
+        .alerts-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border: 2px solid #1d3557;
+        }
+        
+        .section-title {
+            color: #1d3557;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .demo-notice {
+            background-color: #a8dadc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #1d3557;
+        }
+        
+        .no-alerts {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+            font-size: 1.2rem;
+        }
+        
+        .no-alerts i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        .alerts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .alert-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #e63946;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .alert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .demo-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #2a9d8f;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .alert-id {
+            background-color: #e63946;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .alert-status {
+            background-color: #a8dadc;
+            color: #1d3557;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .alert-details {
+            margin-bottom: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #457b9d;
+            min-width: 120px;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .map-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #1d3557;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .map-link:hover {
+            background-color: #14213d;
+        }
+        
+        .map-link i {
+            margin-right: 5px;
+        }
+        
+        .area-tag {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 3px 10px;
+            background-color: #f1faee;
+            color: #2a9d8f;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .system-info {
+            background-color: #f1faee;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #457b9d;
+        }
+        
+        .system-info h3 {
+            color: #1d3557;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .system-info p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .developer-info {
+            background-color: #1d3557;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .stats-card {
+                width: 100%;
+            }
+            
+            .alerts-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .controls-left {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .academy-badge {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 10px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="academy-badge">DEVKI HIGH SCHOOL</div>
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="header-text">
+                    <h1>LindaJamii</h1>
+                    <p>Call Center Dashboard - Gender Based Violence Emergency Alert System</p>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="number" id="totalAlerts">0</div>
+                <div class="label">Total Alerts Received</div>
+            </div>
+        </header>
+        
+        <div class="dashboard-controls">
+            <div class="controls-left">
+                <button id="refreshBtn" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh Alerts
+                </button>
+                <button id="simulateBtn" class="simulate-btn">
+                    <i class="fas fa-bullhorn"></i> Simulate Alert
+                </button>
+                <button id="clearAlertsBtn" class="clear-btn">
+                    <i class="fas fa-trash-alt"></i> Clear All Alerts
+                </button>
+            </div>
+            
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Emergency Page
+            </a>
+        </div>
+        
+        <div class="alerts-container">
+            <h2 class="section-title">
+                <i class="fas fa-exclamation-triangle"></i> Emergency Alerts
+            </h2>
+            
+            <div class="demo-notice">
+                <i class="fas fa-map-marker-alt"></i> DEMO MODE: All locations are simulated around Ruiru area
+            </div>
+            
+            <div id="alertsList">
+                <!-- Alerts will be dynamically inserted here -->
+                <div class="no-alerts" id="noAlertsMessage">
+                    <i class="fas fa-inbox"></i>
+                    <p>No emergency alerts received yet.</p>
+                    <p>Click "Simulate Alert" to generate a test alert around Ruiru.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="system-info">
+            <h3><i class="fas fa-info-circle"></i> Dashboard Instructions</h3>
+            <p>This dashboard displays all emergency alerts sent from the public LindaJamii emergency page.</p>
+            <p><strong>How to use:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px; color: #555;">
+                <li>Each alert card shows the date, time, and simulated location in Ruiru area</li>
+                <li>Click the "View on Google Maps" link to see the simulated location on a map</li>
+                <li>Use the Refresh button to update the alert list</li>
+                <li>Use the Simulate Alert button to generate test alerts for demonstration</li>
+                <li>Use the Clear button to remove all alerts (for demonstration purposes)</li>
+            </ul>
+            <p><strong>Note:</strong> This is a demonstration system developed by Devki High School for KSEF. All locations are simulated around Ruiru area.</p>
+        </div>
+        
+        <footer>
+            <div class="developer-info">
+                <p>Developed by DEVKI HIGH SCHOOL - Ruiru, Kenya</p>
+                <p>LindaJamii Call Center Dashboard &copy; 2026 | Gender Based Violence Emergency Alert System | KSEF Project</p>
+            </div>
+            <p style="margin-top: 15px;">This dashboard reads data from localStorage. No data is sent to or received from a server.</p>
+            <p>All locations are simulated around Ruiru for demonstration purposes.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const totalAlertsElement = document.getElementById('totalAlerts');
+        const alertsListElement = document.getElementById('alertsList');
+        const noAlertsMessage = document.getElementById('noAlertsMessage');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const simulateBtn = document.getElementById('simulateBtn');
+        const clearAlertsBtn = document.getElementById('clearAlertsBtn');
+        
+        // Base coordinates for Ruiru area
+        const RUIRU_BASE_LAT = -1.1499;  // Approximate latitude for Ruiru, Kenya
+        const RUIRU_BASE_LNG = 36.9572;  // Approximate longitude for Ruiru, Kenya
+        
+        // Function to generate fake location around Ruiru
+        function generateFakeLocation() {
+            // Generate random offset within approximately 2km radius
+            const latOffset = (Math.random() - 0.5) * 0.02;  // ±0.02 degrees ≈ ±2.2km
+            const lngOffset = (Math.random() - 0.5) * 0.02;  // ±0.02 degrees ≈ ±2.2km
+            
+            return {
+                latitude: RUIRU_BASE_LAT + latOffset,
+                longitude: RUIRU_BASE_LNG + lngOffset
+            };
+        }
+        
+        // Function to simulate an alert
+        function simulateAlert() {
+            const now = new Date();
+            const date = now.toLocaleDateString();
+            const time = now.toLocaleTimeString();
+            const timestamp = now.getTime();
+            
+            // Generate fake location
+            const fakeLocation = generateFakeLocation();
+            
+            // Get existing alerts from localStorage or create empty array
+            const alerts = JSON.parse(localStorage.getItem('lindajamii_alerts')) || [];
+            
+            // Create new alert object
+            const newAlert = {
+                id: timestamp,
+                date,
+                time,
+                latitude: fakeLocation.latitude,
+                longitude: fakeLocation.longitude,
+                status: 'active',
+                isSimulated: true
+            };
+            
+            // Add new alert to beginning of array
+            alerts.unshift(newAlert);
+            
+            // Save back to localStorage
+            localStorage.setItem('lindajamii_alerts', JSON.stringify(alerts));
+            
+            // Reload alerts
+            loadAlerts();
+            
+            // Show temporary confirmation
+            const originalText = simulateBtn.innerHTML;
+            simulateBtn.innerHTML = '<i class="fas fa-check"></i> Alert Simulated!';
+            simulateBtn.style.backgroundColor = '#2a9d8f';
+            
+            setTimeout(() => {
+                simulateBtn.innerHTML = originalText;
+                simulateBtn.style.backgroundColor = '';
+            }, 2000);
+            
+            console.log('Simulated alert created around Ruiru:', newAlert);
+        }
+        
+        // Function to load and display alerts from localStorage
+        function loadAlerts() {
+            // Get alerts from localStorage
+            const alerts = JSON.parse(localStorage.getItem('lindajamii_alerts')) || [];
+            
+            // Update total alerts count
+            totalAlertsElement.textContent = alerts.length;
+            
+            // Clear the alerts list
+            alertsListElement.innerHTML = '';
+            
+            // Show no alerts message if there are no alerts
+            if (alerts.length === 0) {
+                alertsListElement.appendChild(noAlertsMessage);
+                noAlertsMessage.style.display = 'block';
+                return;
+            } else {
+                noAlertsMessage.style.display = 'none';
+            }
+            
+            // Create alert cards for each alert
+            alerts.forEach(alert => {
+                const alertCard = createAlertCard(alert);
+                alertsListElement.appendChild(alertCard);
+            });
+        }
+        
+        // Function to create an alert card element
+        function createAlertCard(alert) {
+            const alertCard = document.createElement('div');
+            alertCard.className = 'alert-card';
+            
+            // Format the ID to show only last 4 digits for brevity
+            const shortId = alert.id.toString().slice(-4);
+            
+            // Format coordinates to show 6 decimal places
+            const latFormatted = typeof alert.latitude === 'number' ? alert.latitude.toFixed(6) : alert.latitude;
+            const lngFormatted = typeof alert.longitude === 'number' ? alert.longitude.toFixed(6) : alert.longitude;
+            
+            // Create Google Maps link if location is available
+            let mapsLink = '';
+            if (alert.latitude !== 'Location not available' && alert.longitude !== 'Location not available') {
+                mapsLink = `
+                    <a href="https://www.google.com/maps?q=${alert.latitude},${alert.longitude}" 
+                       target="_blank" 
+                       class="map-link">
+                        <i class="fas fa-map-marked-alt"></i> View on Google Maps
+                    </a>
+                `;
+            } else {
+                mapsLink = '<span style="color:#e63946; font-weight:bold;">Location not available</span>';
+            }
+            
+            alertCard.innerHTML = `
+                ${alert.isSimulated ? '<div class="demo-badge">SIMULATED</div>' : ''}
+                <div class="alert-header">
+                    <div class="alert-id">Alert #${shortId}</div>
+                    <div class="alert-status">${alert.status.toUpperCase()}</div>
+                </div>
+                
+                <div class="alert-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Date:</div>
+                        <div class="detail-value">${alert.date}</div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Time:</div>
+                        <div class="detail-value">${alert.time}</div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Latitude:</div>
+                        <div class="detail-value">${latFormatted}</div>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <div class="detail-label">Longitude:</div>
+                        <div class="detail-value">${lngFormatted}</div>
+                    </div>
+                </div>
+                
+                <div class="area-tag">
+                    <i class="fas fa-map-pin"></i> Ruiru Area
+                </div>
+                
+                <div style="margin-top: 10px;">
+                    ${mapsLink}
+                </div>
+            `;
+            
+            return alertCard;
+        }
+        
+        // Function to clear all alerts from localStorage
+        function clearAllAlerts() {
+            if (confirm('Are you sure you want to clear all alerts? This action cannot be undone.')) {
+                localStorage.removeItem('lindajamii_alerts');
+                loadAlerts(); // Refresh the display
+                
+                // Show a temporary confirmation message
+                const originalText = clearAlertsBtn.innerHTML;
+                clearAlertsBtn.innerHTML = '<i class="fas fa-check"></i> Alerts Cleared!';
+                clearAlertsBtn.style.backgroundColor = '#a8dadc';
+                clearAlertsBtn.style.color = '#1d3557';
+                clearAlertsBtn.style.borderColor = '#1d3557';
+                
+                setTimeout(() => {
+                    clearAlertsBtn.innerHTML = originalText;
+                    clearAlertsBtn.style.backgroundColor = '';
+                    clearAlertsBtn.style.color = '';
+                    clearAlertsBtn.style.borderColor = '';
+                }, 2000);
+            }
+        }
+        
+        // Event listeners
+        refreshBtn.addEventListener('click', loadAlerts);
+        simulateBtn.addEventListener('click', simulateAlert);
+        clearAlertsBtn.addEventListener('click', clearAllAlerts);
+        
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('LindaJamii Call Center Dashboard Loaded - Developed by Devki High School');
+            console.log('All locations are simulated around Ruiru area');
+            loadAlerts();
+            
+            // Optional: Auto-refresh every 10 seconds
+            setInterval(loadAlerts, 10000);
+            
+            // If no alerts exist, create a few sample alerts for demonstration
+            const alerts = JSON.parse(localStorage.getItem('lindajamii_alerts')) || [];
+            if (alerts.length === 0) {
+                // Create 3 sample alerts for initial demonstration
+                setTimeout(() => {
+                    simulateAlert();
+                    setTimeout(simulateAlert, 500);
+                    setTimeout(simulateAlert, 1000);
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
